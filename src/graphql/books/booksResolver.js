@@ -17,6 +17,7 @@ module.exports = {
     Query: {
         bookCount: () => books.length,
         allBooks: () => books,
+        // args sisältää kyselyn parametrit
         findBook: (root, args) =>
             books.find(b => b.name === args.name)
     }

@@ -1,9 +1,9 @@
 const { makeExecutableSchema, gql } = require("apollo-server");
 
-const booksTypeDefs = require('./queries/books/booksTypeDefs')
-const booksResolver = require('./queries/books/booksResolver');
-const notesTypeDefs = require('./queries/notes/notesTypeDefs')
-const notesResolver = require('./queries/notes/notesResolver');
+const booksTypeDefs = require('./books/booksTypeDefs')
+const booksResolver = require('./books/booksResolver');
+const notesTypeDefs = require('./notes/notesTypeDefs')
+const notesResolver = require('./notes/notesResolver');
 
 const rootTypeDefs = gql`
   type Query {
