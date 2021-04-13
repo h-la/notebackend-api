@@ -1,5 +1,6 @@
 const { v1: uuid } = require('uuid')
 const { UserInputError } = require('apollo-server')
+const Note = require('../../models/note.js')
 
 let notes = [
     {
@@ -23,49 +24,31 @@ let notes = [
 
 module.exports = {
     Query: {
-        notesCount: () => notes.length,
-        allNotes: () => notes,
-        findNote: (root, args) =>
-            notes.find(n => n.title === args.title)
+        notesCount: () => Note.collection.countDocuments(),
+        allNotes: () => {
+            return Note.find({})
+        },
+        findNote: (root, args) => Note.findOne({ title: args.title })
     },
     Mutation: {
         addNote: (root, args) => {
-        /*    if (notes.find(n => n.title === args.title)) {
-                throw new UserInputError('Title must be unique', {
-                    invalidArgs: args.title,
-                })
-            } */
-            const note = { ...args, id: uuid() }
-            notes = notes.concat(note)
-            return note
+            const note = new Note({ ...args })
+            return note.save()
         },
-
-        editNote: (root, args) => {
-            const note = notes.find(n => n.id === args.id)
-            if (!note) {
-                return null
-            }
-
-            const updatedNote = {
-                ...note,
-                title: args.title || note.title,
-                text: args.text || note.text,
-                url: args.url || note.url,
-                important: args.important || false
-            }
-
-            notes = notes.map(n => n.id === args.id ? updatedNote : n)
-            return updatedNote
+        editNote: async (root, args) => {
+            let important = args.important
+            const note = await Note.findOne({ _id: args.id })                
+            if (args.important == null) {
+                important = note.important
+            }         
+            note.title = args.title || note.title
+            note.text = args.text || note.text
+            note.url = args.url || note.url
+            note.important = important
+            return note.save()
         },
-
-        deleteNote:(root, args) => {
-            const note = notes.find(n => n.id === args.id)
-            if (!note) {
-                return false
-            }
-            notes = notes.filter(n => n.id !== args.id)
-            return true
+        deleteNote: (root, args) => {
+            return Note.deleteOne({ _id: args.id })
         }
-
     }
 }

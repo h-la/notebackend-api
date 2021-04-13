@@ -2,7 +2,7 @@ const { gql } = require("apollo-server");
 
 const typeDefs = gql`
     type Note {
-      title: String!
+      title: String
       text: String
       url: String
       important: Boolean
@@ -17,7 +17,7 @@ const typeDefs = gql`
 
     extend type Mutation {
       addNote(
-        title: String!
+        title: String
         text: String
         url: String
         important: Boolean
@@ -31,7 +31,7 @@ const typeDefs = gql`
       ): Note
       deleteNote(
         id: ID!
-      ): Boolean
+      ): Note
     }
 
   `
