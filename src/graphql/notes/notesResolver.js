@@ -7,7 +7,7 @@ module.exports = {
         allNotes: () => {
             return Note.find({})
         },
-        findNote: (root, args) => Note.findOne({ title: args.title })
+        findNote: (root, args) => Note.findOne({ _id: args.id })
     },
     Mutation: {
         addNote: async (root, args) => {

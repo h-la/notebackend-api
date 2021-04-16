@@ -12,7 +12,7 @@ const typeDefs = gql`
     extend type Query {
         notesCount: Int!
         allNotes: [Note!]!
-        findNote(title: String!): Note
+        findNote(id: ID!): Note
     }
 
     extend type Mutation {

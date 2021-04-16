@@ -20,8 +20,8 @@ query {
 }
 # ------------------
 
-query ($noteToSearch: String!) {
-  findNote(title: $noteToSearch) {
+query ($noteToSearch: ID!) {
+  findNote(id: $noteToSearch) {
     title
     text
     url
@@ -31,7 +31,7 @@ query ($noteToSearch: String!) {
 }
 
 QUERY VARIABLES:
-{"noteToSearch": "Hae ruoka"}
+{"noteToSearch": "60757c63fd4c3c491419d5cf"}
 # ------------------
 
 mutation createNote(
