@@ -3,6 +3,34 @@ Api is using Apollo server
 
 # queries & mutations
 
+# user
+mutation addUser($username: String!, $password: String!) {
+  createUser(username: $username, password: $password) {
+    username
+    passwordHash
+    id
+  }
+}
+
+QUERY VARIABLES:
+{
+  "username": "jorma",  
+	"password": "1234567890"
+}
+# ------------------
+
+mutation login($username: String!, $password: String!) {
+  login(username: $username, password: $password) {
+    value   
+  }
+}
+
+QUERY VARIABLES:
+{
+  "username": "jorma",  
+	"password": "1234567890"
+}
+
 # notes
 query {
   allNotes {

@@ -1,5 +1,7 @@
 const { makeExecutableSchema, gql } = require("apollo-server");
 
+const userTypeDefs = require('./user/userTypeDefs')
+const userResolver = require('./user/userResolver');
 const booksTypeDefs = require('./books/booksTypeDefs')
 const booksResolver = require('./books/booksResolver');
 const notesTypeDefs = require('./notes/notesTypeDefs')
@@ -16,19 +18,21 @@ const rootTypeDefs = gql`
   `
 
 const typeDefs = [
-    rootTypeDefs,
-    booksTypeDefs,
-    notesTypeDefs
+  rootTypeDefs,
+  userTypeDefs,
+  booksTypeDefs,
+  notesTypeDefs
 ]
 
 const resolvers = [
-    notesResolver,
-    booksResolver
+  userResolver,
+  notesResolver,
+  booksResolver
 ]
 
 const schema = makeExecutableSchema({
-    typeDefs,
-    resolvers,
+  typeDefs,
+  resolvers,
 });
 
 module.exports = schema;
