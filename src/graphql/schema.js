@@ -16,7 +16,7 @@ const rootTypeDefs = gql`
     root: String
   }
   `
-
+  
 const typeDefs = [
   rootTypeDefs,
   userTypeDefs,
@@ -32,7 +32,7 @@ const resolvers = [
 
 const schema = makeExecutableSchema({
   typeDefs,
-  resolvers,
+  resolvers
 });
 
 module.exports = schema;

@@ -6,6 +6,11 @@ const User = require('../../models/user.js')
 const JWT_SECRET = process.env.JWT_SECRET
 
 module.exports = {
+    Query: {
+        me: (root, args, context) => {
+            return context.currentUser
+        }
+    },
     Mutation: {
         createUser: async (root, args) => {
             const saltRounds = 10

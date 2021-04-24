@@ -7,6 +7,7 @@ const typeDefs = gql`
       url: String
       important: Boolean
       id: ID!
+      user: ID
     }
   
     extend type Query {
@@ -21,6 +22,7 @@ const typeDefs = gql`
         text: String
         url: String
         important: Boolean
+        user: ID
       ): Note
       editNote(
         id: ID!
