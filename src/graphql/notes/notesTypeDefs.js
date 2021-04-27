@@ -1,12 +1,16 @@
 const { gql } = require("apollo-server");
 
 const typeDefs = gql`
+    scalar Date
+
     type Note {
       title: String
       text: String
       url: String
       important: Boolean
       id: ID!
+      dateCreated: Date
+      dateModified: Date
       user: ID
     }
   
@@ -22,6 +26,8 @@ const typeDefs = gql`
         text: String
         url: String
         important: Boolean
+        dateCreated: Date
+        dateModified: Date
         user: ID
       ): Note
       editNote(
@@ -30,6 +36,7 @@ const typeDefs = gql`
         text: String
         url: String
         important: Boolean
+        dateModified: Date
       ): Note
       deleteNote(
         id: ID!

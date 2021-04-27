@@ -1,60 +1,78 @@
-const { UserInputError } = require('apollo-server')
+const { UserInputError, AuthenticationError } = require('apollo-server')
 const Note = require('../../models/note.js')
-const User = require('../../models/user.js')
 
 module.exports = {
   Query: {
     notesCount: () => Note.collection.countDocuments(),
-    //  allNotes: () => {
-    //    return Note.find({})
-    //  },
     allNotes: (root, args, context) => {
       const currentUser = context.currentUser
-      if (currentUser) {
-        return Note.find({ user: currentUser._id })
+      if (!currentUser) {
+        throw new AuthenticationError("not authenticated")
       }
-      return Note.find({})
-
+      return Note.find({ user: currentUser._id })
+      //return Note.find({})
     },
-    findNote: (root, args) => Note.findOne({ _id: args.id })
+    findNote: async (root, args, context) => {
+      const currentUser = context.currentUser
+      if (!currentUser) {
+        throw new AuthenticationError("not authenticated")
+      }
+      //  const note = await Note.findOne({ _id: args.id })
+      //  if (String(note.user) === String(currentUser._id)) {
+      //    return note
+      //  }
+      return Note.findOne({ _id: args.id })
+    }
   },
   Mutation: {
     addNote: async (root, args, context) => {
       const currentUser = context.currentUser
-
-      // if (!currentUser) {
-      //   throw new AuthenticationError("not authenticated")
-      // }
+      if (!currentUser) {
+        throw new AuthenticationError("not authenticated")
+      }
 
       let important = args.important
-
+      console.log(args.important)
       if (args.important == null) {
-        important = note.important
+        important = false
       }
+
+      // const date = new Date()
 
       const note = new Note({
         title: args.title,
         text: args.text,
         url: args.url,
         important: important,
+        dateCreated: new Date(),
+        dateModified: new Date(),
         user: currentUser._id
       })
 
-      //  const note = new Note({ ...args })
-
       try {
-        await note.save()
+        const newNote = await note.save()
+        return newNote
       } catch (error) {
         throw new UserInputError(error.message, {
           invalidArgs: args,
         })
       }
 
-      return note
+      //  return newNote
     },
-    editNote: async (root, args) => {
-      let important = args.important
+    editNote: async (root, args, context) => {
+      const currentUser = context.currentUser
+      if (!currentUser) {
+        throw new AuthenticationError("not authenticated")
+      }
+
       const note = await Note.findOne({ _id: args.id })
+
+      //  if (String(note.user) !== String(currentUser._id)) {
+      //    return null
+      //  }
+
+      let important = args.important
       if (args.important == null) {
         important = note.important
       }
@@ -63,27 +81,44 @@ module.exports = {
       note.text = args.text || note.text
       note.url = args.url || note.url
       note.important = important
+      note.dateModified = new Date()
 
       try {
-        await note.save()
+        const newNote = await note.save()
+        return newNote
       } catch (error) {
         throw new UserInputError(error.message, {
           invalidArgs: args,
         })
       }
 
-      return note
+      //   return note
     },
-    deleteNote: async (root, args) => {
+    deleteNote: async (root, args, context) => {
+      const currentUser = context.currentUser
+      if (!currentUser) {
+        throw new AuthenticationError("not authenticated")
+      }
+
+      //  const ownNote = await Note.findOne({ _id: args.id })
+      //  if (String(ownNote.user) !== String(currentUser._id)) {
+      //    return null
+      //  }
+
       try {
-        note = await Note.deleteOne({ _id: args.id })
+        const note = await Note.deleteOne({ _id: args.id })
+        //  const note = await Note.deleteOne({ _id: args.id })
+        //  if (note.deletedCount === 1) {
+        //    return true
+        //  }
+        return note
       } catch (error) {
         throw new UserInputError(error.message, {
           invalidArgs: args,
         })
       }
 
-      return note
+      //  return null
     }
   }
 }
