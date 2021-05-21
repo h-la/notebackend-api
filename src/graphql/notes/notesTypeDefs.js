@@ -3,6 +3,16 @@ const { gql } = require("apollo-server");
 const typeDefs = gql`
     scalar Date
 
+    input NoteOrderByInput {
+      dateModified: Sort
+      important: Sort
+    }
+
+    enum Sort {
+      asc
+      desc
+    }
+
     type Note {
       title: String
       text: String
@@ -15,8 +25,8 @@ const typeDefs = gql`
     }
   
     extend type Query {
-        notesCount: Int!
-        allNotes: [Note!]!
+        notesCount: Int!     
+        allNotes(order: NoteOrderByInput): [Note!]!
         findNote(id: ID!): Note
     }
 

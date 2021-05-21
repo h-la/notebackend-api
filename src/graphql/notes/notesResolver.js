@@ -1,17 +1,42 @@
 const { UserInputError, AuthenticationError } = require('apollo-server')
+const { assertValidName } = require('graphql')
 const Note = require('../../models/note.js')
 
 module.exports = {
   Query: {
     notesCount: () => Note.collection.countDocuments(),
+
     allNotes: (root, args, context) => {
       const currentUser = context.currentUser
       if (!currentUser) {
         throw new AuthenticationError("not authenticated")
       }
+
+      // sort condition
+      condition = { dateModified: -1 }
+
+      if (args.order) {
+        condition = args.order
+        console.log(condition.dateModified)
+        if (condition.dateModified == 'asc') {
+          condition.dateModified = 1
+        } else if (condition.dateModified == 'desc') {
+          condition.dateModified = -1
+        }
+      }
+
+      // return Note.find({ user: currentUser._id, order: args.order })
+      if (condition.important == 'asc' || condition.important == 'desc') {
+        return Note.find({ user: currentUser._id })
+          .sort(condition)
+          .sort({ dateModified: -1 })
+      }
+      
       return Note.find({ user: currentUser._id })
+        .sort(condition)
       //return Note.find({})
     },
+
     findNote: async (root, args, context) => {
       const currentUser = context.currentUser
       if (!currentUser) {

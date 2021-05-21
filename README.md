@@ -41,6 +41,16 @@ query {
     id
   }
 }
+
+query {
+  allNotes (order : {important:asc}) {
+    title
+    text
+    url
+    important
+    id
+  }
+}
 # ------------------
 
 query {
