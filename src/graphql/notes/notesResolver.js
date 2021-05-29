@@ -30,10 +30,12 @@ module.exports = {
         return Note.find({ user: currentUser._id })
           .sort(condition)
           .sort({ dateModified: -1 })
+        //  .limit(args.first)
       }
       
       return Note.find({ user: currentUser._id })
         .sort(condition)
+       // .limit(args.first)
       //return Note.find({})
     },
 

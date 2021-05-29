@@ -1,7 +1,7 @@
 # GraphQL server
 Api is using Apollo server
 
-# queries & mutations
+# queries & mutations examples
 
 # user
 mutation addUser($username: String!, $password: String!) {
@@ -51,6 +51,22 @@ query {
     id
   }
 }
+
+query ($sortingOrder: NoteOrderByInput) {
+  allNotes (order : $sortingOrder){
+    title
+    text
+    url
+    important
+    id
+    dateCreated
+    dateModified
+  }
+}
+
+QUERY VARIABLES:
+{"sortingOrder" :  {"important":"desc"}}
+
 # ------------------
 
 query {
@@ -131,3 +147,48 @@ QUERY VARIABLES:
   "id": "3d599470-3436-11e9-bc57-8b80ba54c431"
 }
 # ------------------
+
+# books
+
+query {
+  allBooks {
+    name
+    author
+    description
+    id
+  }
+}
+
+# ------------------
+
+mutation createBook(
+  $name: String
+  $author: String
+  $genre: String
+  $description: String
+  $important: Boolean
+) {
+  addBook(name: $name, author: $author, genre: $genre, description: $description, important: $important) {
+    name
+    author
+    genre
+    description
+    important
+    id
+    user
+    dateCreated
+    dateModified
+  }
+}
+
+QUERY VARIABLES:
+  {
+  "name": "seitseman veljesta",  
+	"author": "Aleksis Kivi",
+  "genre": "klassikko",
+  "description": "",
+  "important": false
+  }
+
+# ------------------
+
